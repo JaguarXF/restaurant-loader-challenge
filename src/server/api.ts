@@ -26,7 +26,7 @@ export interface RestaurantDetails {
   classifications: { id: string; name: string; type: string; vertical: string; }[];
   departments: unknown[];
   tags: { id: number; name: string; type: string; }[];
-  menu_id: number;
+  menuId: number; // <- this property might be incorrect
   address: Address;
   images: {
 		restaurant_header: Image;
@@ -53,8 +53,8 @@ export async function fetchRestaurantDetails(
 
 export interface Menu {
   id: number
-  has_menu_id: number
-  has_menu_type: string
+  has_menu_type: string // "restaurant" or "group"
+  has_menu_id: number // restaurant/group id
   name: string
   status: string
   sections: Section[]

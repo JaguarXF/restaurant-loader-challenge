@@ -8,9 +8,9 @@ You're building a progressive restaurant discovery page that loads data from an 
 
 **What we're testing:** Concurrency control, streaming responses, progressive UI updates, and code quality.
 
-**What we're looking for:** Commits that show planning. If the bulk of your CSS is in one ealry commit it shows you planned your layout and components first.
+**What we're looking for:** Commits that show planning. If the bulk of your CSS is in one early commit, it shows you planned your layout and components first.
 
-**PLEASE:** Read through all the instructions and plan your approach before you start. As you work through your plan, commit after every meaningful code change with detailed commit messages. To be honest, AI will produce the best result **IF** your prompts are well worded and well planned. Please take note of your prompts and include them in the submission.
+**PLEASE:** Read through all the instructions and plan your approach before you start. As you work through your plan, commit after every meaningful code change with detailed commit messages. To be honest, AI will produce the best result **IF** your prompts are well-worded and well-planned. Please take note of your prompts and include them in the submission.
 
 ---
 
@@ -91,7 +91,7 @@ This demonstrates the **chunked JSON streaming pattern** you'll use. Check:
    - Don't fetch all 134 at once (will overload the API)
    - Don't fetch one-by-one (too slow)
    - Keep exactly 5 active requests at any time
-   - Create `loader.ts` for this
+   - Create a separate module for this
 
 4. **Stream updates** to the client
    - Don't wait for all to finish before responding
@@ -100,7 +100,7 @@ This demonstrates the **chunked JSON streaming pattern** you'll use. Check:
 5. **Update the client** (`src/client/main.ts`)
    - Call your new `/api/restaurants/stream` endpoint
    - Display restaurant updates as they arrive (progressive rendering)
-   - Show loading progress: "Completed 15/134 requests"
+   - Show real-time loading progress using the total and number completed
    - Update the DOM incrementally, not in batches
 
 **Acceptance Criteria:**
@@ -110,7 +110,7 @@ This demonstrates the **chunked JSON streaming pattern** you'll use. Check:
 ✅ Client displays restaurants as they arrive  
 ✅ Progress indicator updates in real-time  
 ✅ All 134 restaurants' details eventually load (or show errors)  
-✅ Handles API failures gracefully (some requests may fail, especially after hours)  
+✅ Handles API failures gracefully (some requests may fail, especially outside business hours)  
 
 ---
 
@@ -118,9 +118,9 @@ This demonstrates the **chunked JSON streaming pattern** you'll use. Check:
 
 Extend your loader to also fetch restaurant menus:
 
-1. Using each restaurant's details, add its menu to the queue
+1. Add the fetching of each restaurant's menu
 2. Use `fetchRestaurantMenu(id)` from `api.ts`
-3. Send update down the same stream
+3. Send an update down the same stream
 4. Update the restaurant's UI to show menu info
 
 **Constraints:**
@@ -132,10 +132,10 @@ Extend your loader to also fetch restaurant menus:
 ## What We're Evaluating
 
 ### Code Quality
-- ✅ **Organization:** Is logic clearly separated? (queue, streaming, API calls)
+- ✅ **Organization:** Is logic clearly separated?
 - ✅ **TypeScript:** Are types used properly? Avoid `any`
 - ✅ **Readability:** Can another developer understand your code?
-- ✅ **Structure:** Are functions lean and focus on a single problem
+- ✅ **Structure:** Are functions lean and focused on a single problem?
 - ✅ **Comments:** Do you explain non-obvious decisions?
 
 ### Technical Skill
@@ -143,7 +143,7 @@ Extend your loader to also fetch restaurant menus:
 - ✅ **Streaming:** Do results appear progressively or in batches?
 - ✅ **Error handling:** What happens when API calls fail?
 - ✅ **Performance:** Is the approach efficient?
-- ✅ **Testing:** Is the loader easily testable with automation
+- ✅ **Testing:** Is the loader easily testable with automation?
 
 ### Process
 - ✅ **Commits:** Do they show your thought process?
