@@ -8,6 +8,8 @@ You're building a progressive restaurant discovery page that loads data from an 
 
 **What we're testing:** Concurrency control, streaming responses, progressive UI updates, and code quality.
 
+**What we're looking for:** Commits that show planning. If the bulk of your CSS is in one ealry commit it shows you planned your layout and components first.
+
 **PLEASE:** Read through all the instructions and plan your approach before you start. As you work through your plan, commit after every meaningful code change with detailed commit messages. To be honest, AI will produce the best result **IF** your prompts are well worded and well planned. Please take note of your prompts and include them in the submission.
 
 ---
