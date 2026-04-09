@@ -129,6 +129,41 @@ Extend your loader to also fetch restaurant menus:
 
 ---
 
+Here is a diagram to help you visualise the flow of data.
+
+```mermaid
+sequenceDiagram
+participant DOM as Page DOM
+participant C as Client JS
+participant S as Server JS
+participant MrD as mrdfood.com
+
+C->>S: onclick → GET /api/stream/restaurants
+S-->>C: Initial list of restaurants
+C->>DOM: Create restaurant elements
+
+loop Restaurants — limited concurrency
+   S->>MrD: Fetch restaurant details
+   MrD-->>S: RestaurantDetails
+   S-->>C: Stream JSON chunk
+   C->>DOM: Update restaurant element
+end
+
+Note over S:  Part 2: All restaurant details received.<br/>Begin processing queued menu requests.
+
+loop Menus — limited concurrency
+   S->>MrD: Fetch menu by id
+   MrD-->>S: Menu
+   S-->>C: Stream JSON chunk
+   C->>DOM: Update restaurant element
+end
+
+S-->>C: End response stream
+```
+
+
+---
+
 ## What We're Evaluating
 
 ### Code Quality
