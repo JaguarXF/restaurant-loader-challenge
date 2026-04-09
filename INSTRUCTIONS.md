@@ -1,5 +1,7 @@
 # Restaurant Loader Challenge
 
+Thank you for taking the time to complete our take-home code challenge. We appreciate it!
+
 ## Overview
 
 You're building a progressive restaurant discovery page that loads data from an external API. Rather than waiting for all data to load, we want to stream results to the user as they become available.
@@ -16,7 +18,7 @@ You're building a progressive restaurant discovery page that loads data from an 
 
 ## Getting Started
 
-### 1. Create Your Own Repository
+### 1. Create Your Own GitHub Repository
 
 **Option A: Use Template (Recommended)**
 
@@ -27,9 +29,6 @@ You're building a progressive restaurant discovery page that loads data from an 
    - **Repository name:** `restaurant-loader-challenge` (or your choice)
    - **Visibility:** Public OR Private
 4. Click **"Create repository from template"**
-
-**If you chose Private:** Add `gwest7` as a collaborator
-- Go to Settings → Collaborators → Add `gwest7`
 
 **Option B: Manual Clone**
 
@@ -84,6 +83,7 @@ This demonstrates the **chunked JSON streaming pattern** you'll use. Check:
 
 1. **Import all restaurants** from `restaurants.ts`
    - These restaurant names should form the base of the HTML table
+   - Getting it to the client is part of the problem
 
 2. **Fetch details** for each restaurant using `fetchRestaurantDetails(id)` from `api.ts`
 
@@ -107,10 +107,10 @@ This demonstrates the **chunked JSON streaming pattern** you'll use. Check:
 
 ✅ Endpoint streams restaurant data progressively  
 ✅ Never more than 5 concurrent API requests  
-✅ Client displays restaurants as they arrive  
+✅ Client displays/updates restaurants as they arrive  
 ✅ Progress indicator updates in real-time  
 ✅ All 134 restaurants' details eventually load (or show errors)  
-✅ Handles API failures gracefully (some requests may fail, especially outside business hours)  
+✅ Handles API failures gracefully (some requests may fail, especially outside business hours)
 
 ---
 
@@ -132,24 +132,22 @@ Extend your loader to also fetch restaurant menus:
 ## What We're Evaluating
 
 ### Code Quality
-- ✅ **Organization:** Is logic clearly separated?
+- ✅ **Organization:** Is logic clearly separated? Are functions lean and focused?
 - ✅ **TypeScript:** Are types used properly? Avoid `any`
 - ✅ **Readability:** Can another developer understand your code?
-- ✅ **Structure:** Are functions lean and focused on a single problem?
 - ✅ **Comments:** Do you explain non-obvious decisions?
 
 ### Technical Skill
 - ✅ **Concurrency control:** Do you properly limit simultaneous requests?
 - ✅ **Streaming:** Do results appear progressively or in batches?
 - ✅ **Error handling:** What happens when API calls fail?
-- ✅ **Performance:** Is the approach efficient?
 - ✅ **Testing:** Is the loader easily testable with automation?
 
 ### Process
 - ✅ **Commits:** Do they show your thought process?
 - ✅ **Prioritization:** Did you get basics working before attempting bonus?
 - ✅ **Time management:** Working solution in 30-45 minutes?
-- ✅ **LLM:** How well are your prompts worded?
+- ✅ **LLM:** How well are your prompts (if supplied) worded?
 
 ---
 
@@ -170,26 +168,20 @@ When you're done (or time is up):
 
 Please `npm run build && npm run start` to make sure it runs
 
-### 2. Push Your Code
+### 2. Final remarks
 
-Push all your commits to `origin` and let us know when we can pull
+Please edit `FINAL.md` and add any information you feel like.
 
-### 3. Reply to Our Email With:
+### 3. Push Your Code
 
-**Repository link:** `https://github.com/YOUR-USERNAME/restaurant-loader-challenge`
+Make sure you do not have any untracked or uncommitted files. Make sure all your commits are pushed to `origin`.
 
-**If your repo is private:** Confirm you've added `gwest7` as a collaborator
+### 4. Let us have a look
 
-**Tell us how it went:**
-- Your approach to concurrency control
-- How you handled streaming/progressive updates
-- Any trade-offs you made
-- Your use of AI (actual LLM prompts will be appreciated)
+Add `gwest7` as a collaborator. The email from GitHub will be our ping.
 
-**What you'd improve with more time:**
-- What would you add/change with another 30 minutes?
+- Go to Settings → Collaborators → Add `gwest7`
 
-**Estimated time spent:** (Be honest - we're testing realistic pace)
 
 ---
 
