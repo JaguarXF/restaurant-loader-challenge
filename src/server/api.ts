@@ -149,10 +149,10 @@ export interface FeaturedItem {
 
 
 export async function fetchRestaurantMenu(
-  id: number,
+  menuId: number,
 ): Promise<Menu> {
   const response = await fetch(
-    `https://api.mrdfood.com/exposure/preview/menus/${id}`,
+    `https://api.mrdfood.com/exposure/preview/menus/${menuId}`,
   );
 
   if (!response.ok) {
