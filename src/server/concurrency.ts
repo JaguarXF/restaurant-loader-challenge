@@ -19,14 +19,14 @@ export async function* limitConcurrency<T, R>(
 
   function launch(item: T): void {
     const id = slotId++;
-    const p = task(item)
+    const taskPromise = task(item)
       .then((result): Tagged => ({ item, result, slotId: id }))
       .catch((err): Tagged => ({
         item,
         error: err instanceof Error ? err : new Error(String(err)),
         slotId: id,
       }));
-    slots.set(id, p);
+    slots.set(id, taskPromise);
   }
 
   while (slots.size < limit && nextItem < items.length) {

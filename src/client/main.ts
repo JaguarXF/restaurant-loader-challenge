@@ -1,6 +1,6 @@
 // Example client-side TypeScript code
 import './styles.css';
-import { type RestaurantDetails } from '../server/api';
+import { type RestaurantDetails } from '../server/models';
 
 interface ApiResponse {
   message: string;
@@ -58,8 +58,8 @@ streamBtn?.addEventListener('click', async () => {
       const lines = buffer.split('\n');
       buffer = lines[lines.length - 1]; // Keep incomplete line in buffer
 
-      for (let i = 0; i < lines.length - 1; i++) {
-        const line = lines[i].trim();
+      for (let lineIndex = 0; lineIndex < lines.length - 1; lineIndex++) {
+        const line = lines[lineIndex].trim();
         if (line) {
           try {
             const chunk: StreamChunk = JSON.parse(line);
@@ -126,8 +126,8 @@ loadDataBtn?.addEventListener('click', async () => {
       const lines = buffer.split('\n');
       buffer = lines[lines.length - 1];
 
-      for (let i = 0; i < lines.length - 1; i++) {
-        const line = lines[i].trim();
+      for (let lineIndex = 0; lineIndex < lines.length - 1; lineIndex++) {
+        const line = lines[lineIndex].trim();
         if (!line) continue;
         try {
           handleRestaurantChunk(JSON.parse(line) as RestaurantStreamChunk);
@@ -183,7 +183,7 @@ function createRestaurantCard(details: RestaurantDetails): HTMLElement {
     <div class="card-body">
       ${details.description ? `<p class="restaurant-description">${details.description}</p>` : ''}
       <div class="restaurant-tags">
-        ${visibleTags.map(t => `<span class="tag">${t.name}</span>`).join('')}
+        ${visibleTags.map(tag => `<span class="tag">${tag.name}</span>`).join('')}
         ${extraCount > 0 ? `<span class="tag tag-more">+${extraCount} more</span>` : ''}
       </div>
     </div>
