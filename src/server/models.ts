@@ -32,7 +32,7 @@ export interface RestaurantDetails {
   }[];
   departments: unknown[];
   tags: { id: number; name: string; type: string }[];
-  menuId: number; // <- this property might be incorrect
+  menu_id: number;
   address: Address;
   images: {
     restaurant_header: Image;
