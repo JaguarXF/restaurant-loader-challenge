@@ -43,15 +43,21 @@ export async function fetchRestaurantDetails(
 }
 
 export async function fetchRestaurantMenu(menuId: number): Promise<Menu> {
-  const response = await fetch(
-    `https://api.mrdfood.com/exposure/preview/menus/${menuId}`,
-  );
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch restaurant menu (${response.status} ${response.statusText})`,
+  try {
+    const response = await fetch(
+      `https://api.mrdfood.com/exposure/preview/menus/${menuId}`,
     );
-  }
 
-  return (await response.json()) as Menu;
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch restaurant menu (${response.status} ${response.statusText})`,
+      );
+    }
+
+    return (await response.json()) as Menu;
+  } catch (err) {
+    const error = err instanceof Error ? err : new Error(String(err));
+    await logErrorToService(error, { menuId });
+    throw error;
+  }
 }
