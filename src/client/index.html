@@ -25,7 +25,18 @@
         <p><strong>Conclusion:</strong> <span id="conclusionText">-</span></p>
       </div>
 
-      <div class="restuarants-list"></div>
+      <div class="restaurants-section">
+        <div class="restaurants-controls">
+          <button id="loadDataBtn">Load Restaurants</button>
+          <div id="restaurantProgress" class="progress-container hidden">
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
+            <span id="progressLabel">0 / 0</span>
+          </div>
+        </div>
+        <div class="restuarants-list"></div>
+      </div>
 
       <!-- TODO: create a grid to display restaurant details -->
       <table>

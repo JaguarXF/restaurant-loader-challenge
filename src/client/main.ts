@@ -1,7 +1,6 @@
 // Example client-side TypeScript code
 import './styles.css';
-import { list } from '../server/restaurants';
-import { fetchRestaurantDetails, type RestaurantDetails } from '../server/api';
+import { type RestaurantDetails } from '../server/api';
 
 interface ApiResponse {
   message: string;
@@ -91,7 +90,76 @@ function chunkProcessor(chunk: StreamChunk) {
 
 console.log('Client-side TypeScript loaded successfully!');
 
+type RestaurantStreamChunk =
+  | { type: 'start'; total: number }
+  | { type: 'restaurant'; data: RestaurantDetails; processed: number; total: number }
+  | { type: 'error'; id: number; processed: number; total: number }
+  | { type: 'complete'; total: number };
+
 const restaurantsList = document.querySelector('.restuarants-list') as HTMLDivElement;
+const loadDataBtn = document.getElementById('loadDataBtn') as HTMLButtonElement;
+const progressContainer = document.getElementById('restaurantProgress') as HTMLDivElement;
+const progressBarFill = document.getElementById('progressBarFill') as HTMLDivElement;
+const progressLabel = document.getElementById('progressLabel') as HTMLSpanElement;
+
+loadDataBtn?.addEventListener('click', async () => {
+  loadDataBtn.disabled = true;
+  loadDataBtn.textContent = 'Loading...';
+  restaurantsList.innerHTML = '';
+  progressContainer.classList.remove('hidden');
+  progressBarFill.style.width = '0%';
+  progressLabel.textContent = '0 / 0';
+
+  try {
+    const response = await fetch('/api/restaurants/stream');
+    if (!response.body) throw new Error('Response body is null');
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines[lines.length - 1];
+
+      for (let i = 0; i < lines.length - 1; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        try {
+          handleRestaurantChunk(JSON.parse(line) as RestaurantStreamChunk);
+        } catch {
+          console.error('Failed to parse chunk:', line);
+        }
+      }
+    }
+  } catch (err) {
+    console.error('Restaurant stream error:', err);
+  } finally {
+    loadDataBtn.disabled = false;
+    loadDataBtn.textContent = 'Reload';
+  }
+});
+
+function handleRestaurantChunk(chunk: RestaurantStreamChunk): void {
+  if (chunk.type === 'start') {
+    progressLabel.textContent = `0 / ${chunk.total}`;
+    progressBarFill.style.width = '0%';
+  } else if (chunk.type === 'restaurant') {
+    restaurantsList.appendChild(createRestaurantCard(chunk.data));
+    progressBarFill.style.width = `${Math.round((chunk.processed / chunk.total) * 100)}%`;
+    progressLabel.textContent = `${chunk.processed} / ${chunk.total}`;
+  } else if (chunk.type === 'error') {
+    progressBarFill.style.width = `${Math.round((chunk.processed / chunk.total) * 100)}%`;
+    progressLabel.textContent = `${chunk.processed} / ${chunk.total}`;
+  } else if (chunk.type === 'complete') {
+    progressBarFill.style.width = '100%';
+    progressLabel.textContent = `Done — ${chunk.total} processed`;
+  }
+}
 
 function createRestaurantCard(details: RestaurantDetails): HTMLElement {
   const card = document.createElement('div');
@@ -126,12 +194,3 @@ function createRestaurantCard(details: RestaurantDetails): HTMLElement {
 
   return card;
 }
-
-list.forEach(async ({ id }) => {
-  try {
-    const details = await fetchRestaurantDetails(id);
-    restaurantsList.appendChild(createRestaurantCard(details));
-  } catch {
-    // error already logged to external service inside fetchRestaurantDetails
-  }
-});

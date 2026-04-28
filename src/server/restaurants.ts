@@ -1,4 +1,11 @@
-export const list = [
+export interface Restaurant {
+  id: number;
+  name: string;
+  suburb: string;
+  vertical: "restaurant" | "store";
+}
+
+export const list: Restaurant[] = [
 	{
 		"id": 13300,
 		"name": "Dong Sheng Sloane Square",

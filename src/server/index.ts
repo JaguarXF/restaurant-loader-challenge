@@ -1,5 +1,8 @@
 import express, { Request, Response } from 'express';
 import path from 'path';
+import { list } from './restaurants';
+import { fetchRestaurantDetails } from './api';
+import { limitConcurrency } from './concurrency';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -46,10 +49,42 @@ app.get('/api/stream', (req: Request, res: Response) => {
   }, interval);
 });
 
-// Add more routes here as needed
-// app.get('/api/example', (req: Request, res: Response) => {
-//   res.json({ data: 'example' });
-// });
+// Streams restaurant details progressively, fetching with concurrency of 5
+app.get('/api/restaurants/stream', async (req: Request, res: Response) => {
+  res.setHeader('Content-Type', 'application/x-ndjson');
+  res.setHeader('Cache-Control', 'no-cache');
+
+  let closed = false;
+  req.on('close', () => { closed = true; });
+
+  try {
+    res.write(JSON.stringify({ type: 'start', total: list.length }) + '\n');
+
+    let processed = 0;
+
+    for await (const outcome of limitConcurrency(list, 5, item => fetchRestaurantDetails(item.id))) {
+      if (closed) break;
+      processed++;
+
+      if (outcome.error) {
+        res.write(JSON.stringify({ type: 'error', id: outcome.item.id, processed, total: list.length }) + '\n');
+      } else {
+        res.write(JSON.stringify({ type: 'restaurant', data: outcome.result, processed, total: list.length }) + '\n');
+      }
+    }
+
+    if (!closed) {
+      res.write(JSON.stringify({ type: 'complete', total: list.length }) + '\n');
+      res.end();
+    }
+  } catch (err) {
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Stream failed' });
+    } else {
+      res.end();
+    }
+  }
+});
 
 // Serve index.html for root route
 app.get('/', (req: Request, res: Response) => {
