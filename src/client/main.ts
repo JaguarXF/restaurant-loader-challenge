@@ -1,5 +1,7 @@
 // Example client-side TypeScript code
 import './styles.css';
+import { list } from '../server/restaurants';
+import { fetchRestaurantDetails, type RestaurantDetails } from '../server/api';
 
 interface ApiResponse {
   message: string;
@@ -88,3 +90,48 @@ function chunkProcessor(chunk: StreamChunk) {
 }
 
 console.log('Client-side TypeScript loaded successfully!');
+
+const restaurantsList = document.querySelector('.restuarants-list') as HTMLDivElement;
+
+function createRestaurantCard(details: RestaurantDetails): HTMLElement {
+  const card = document.createElement('div');
+  card.className = 'restaurant-card';
+
+  const logoSrc = details.images?.restaurant_logo?.raw_image ?? '';
+  const rating = details.statistics?.avg_food_quality_rating?.toFixed(1) ?? 'N/A';
+  const tags = details.tags ?? [];
+  const visibleTags = tags.slice(0, 5);
+  const extraCount = tags.length - visibleTags.length;
+  const { street_number, street_name, suburb } = details.address ?? {};
+
+  card.innerHTML = `
+    <div class="card-header">
+      ${logoSrc ? `<img src="${logoSrc}" alt="${details.name} logo" class="restaurant-logo" />` : ''}
+      <div class="card-header-info">
+        <h3 class="restaurant-name">${details.name}</h3>
+        <span class="restaurant-rating">&#9733; ${rating}</span>
+      </div>
+    </div>
+    <div class="card-body">
+      ${details.description ? `<p class="restaurant-description">${details.description}</p>` : ''}
+      <div class="restaurant-tags">
+        ${visibleTags.map(t => `<span class="tag">${t.name}</span>`).join('')}
+        ${extraCount > 0 ? `<span class="tag tag-more">+${extraCount} more</span>` : ''}
+      </div>
+    </div>
+    <div class="card-footer">
+      <small>${[street_number, street_name, suburb].filter(Boolean).join(' ')}</small>
+    </div>
+  `;
+
+  return card;
+}
+
+list.forEach(async ({ id }) => {
+  try {
+    const details = await fetchRestaurantDetails(id);
+    restaurantsList.appendChild(createRestaurantCard(details));
+  } catch {
+    // error already logged to external service inside fetchRestaurantDetails
+  }
+});

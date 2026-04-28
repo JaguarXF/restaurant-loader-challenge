@@ -4,6 +4,8 @@ export type Vertical = "restaurant" | "store";
 export interface Image {
   base_url: string;
   filename: string;
+  raw_image?: string;
+  provider?: string;
 }
 
 export interface Address {
@@ -32,23 +34,50 @@ export interface RestaurantDetails {
 		restaurant_header: Image;
 		restaurant_logo: Image;
 	};
+  statistics: {
+    avg_food_quality_rating: number;
+    cnt_food_quality_rating: number;
+  };
   supported_ux: string[];
+}
+
+async function logErrorToService(error: Error, context: Record<string, unknown>): Promise<void> {
+  try {
+    await fetch('https://logs.mrdfood.com/api/v1/errors', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: error.message,
+        stack: error.stack,
+        context,
+        timestamp: new Date().toISOString(),
+      }),
+    });
+  } catch {
+    // swallow — avoid recursive error logging
+  }
 }
 
 export async function fetchRestaurantDetails(
   id: number,
 ): Promise<RestaurantDetails> {
-  const response = await fetch(
-    `https://api.mrdfood.com/exposure/preview/v2/restaurants/${id}`,
-  );
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch restaurant details (${response.status} ${response.statusText})`,
+  try {
+    const response = await fetch(
+      `https://api.mrdfood.com/exposure/preview/v2/restaurants/${id}`,
     );
-  }
 
-  return (await response.json()) as RestaurantDetails;
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch restaurant details (${response.status} ${response.statusText})`,
+      );
+    }
+
+    return (await response.json()) as RestaurantDetails;
+  } catch (err) {
+    const error = err instanceof Error ? err : new Error(String(err));
+    await logErrorToService(error, { restaurantId: id });
+    throw error;
+  }
 }
 
 export interface Menu {
