@@ -1,5 +1,8 @@
 import { RestaurantDetails, Menu } from "./models";
 
+// Mocked service for Anaylsis
+// In this file, we also implement a simple error logging function that sends errors to an external service.
+// In a real app, these would be real API calls to the backend server.
 async function logErrorToService(
   error: Error,
   context: Record<string, unknown>,
