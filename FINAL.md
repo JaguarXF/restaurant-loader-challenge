@@ -6,7 +6,7 @@ Please commit this file with your name below. It is often not possible to accura
 
 
 # Submission feedback
-
+Overall, good assessment, testin technical coding and UI/UX understanding. 
 
 
 ## Planning
@@ -17,9 +17,10 @@ Please commit this file with your name below. It is often not possible to accura
 4. After looking at the data content, I decided upon the important data elements to display.
 
 ## Coding
-1. Added a `logErrorToService` function to log errors to an external service for troubleshooting and analytics.
-2. Made use of AI in a considerable manner to get things going.
-3. Here is an example prompt that I used after fully understanding the requirements:
+1. Failed records should not be displayed, we will just log them to a service.
+2. Added a `logErrorToService` function to log errors to an external service for troubleshooting and analytics if a call failed. 
+3. Made use of AI in a considerable manner to get things going.
+4. Here is an example prompt that I used after fully understanding the requirements:
 
 Example of the two main prompts which I used with AI:
 
