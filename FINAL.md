@@ -10,7 +10,7 @@ Thank you for taking the time to complete this take-home coding assignment.
 
 # Submission feedback
 
-_Please delete all the italic text. Your feedback is all we want. One liner answers are fine!_
+Added a `logErrorToService` function to log errors to an external service for troubleshooting and analytics.
 
 ## Planning
 
